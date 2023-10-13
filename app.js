@@ -4,8 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
+let userRoutes = require('./routes/uesrRoutes');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/Dogo', {
+  useNewUrlParser: true
+})
+    .then(() => {
+      console.log('Connected to DB');
+    })
+    .catch(err => {
+      console.log(err);
+    });
 
 var app = express();
 
@@ -19,8 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/',userRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
