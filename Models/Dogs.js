@@ -14,17 +14,12 @@ let dogSchema = new Schema({
     },
     id : {
         type : String,
-        unique: true,
     },
     weight : Number,
     createdAt : String,
     breed :[{type : Schema.ObjectId, ref : 'Breed'}],
 })
 
-dogSchema.pre('save', async (next) => {
-    this.id = uuid.v4();
-    this.createdAt = moment().unix();
-    next();
-});
+
 
 module.exports = mongoose.model('Dogs',dogSchema);
