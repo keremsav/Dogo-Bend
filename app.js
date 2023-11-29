@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let breedSaveToDb = require('./controllers/breedControllers');
+require('dotenv').config();
+
 
 
 let userRoutes = require('./routes/uesrRoutes');

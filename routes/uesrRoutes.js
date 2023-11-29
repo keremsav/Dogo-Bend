@@ -27,7 +27,7 @@ router.post('/register/user', async (req,res) => {
             return res.json({ message: 'Please enter all the details' })
         }
         if(validator.isEmail(email) !== true ) {
-            return res.json({ message: 'This is not an email address' })
+            return res.status(400).json({ message: 'This is not an email address' })
         }
         if(validate(password) !== true) {
             return res.json({ message: 'Password is to weak.' })
@@ -60,23 +60,30 @@ router.post('/login/user',async function (req,res) {
             return res.json({ message: 'This is not an email address' })
         }
         //Check if the user already exist or not
-        const userExist = await User.findOne({email:req.body.email});
+        const userExist = await Users.findOne({email:req.body.email});
         if(!userExist){
-            return res.json({message:'Wrong credentials'})
+            return res.status(400).json({message:'Wrong credentials'})
         }
         //Check password match
         const isPasswordMatched = await bcrypt.compare(password,userExist.password);
         if(!isPasswordMatched){
             return res.json({message:'Wrong credentials pass'});
         }
-        const token = await jwt.sign({ id: userExist._id ,isAdmin : userExist.isAdmin}, process.env.SECRET_KEY, {
+        const token = await jwt.sign({ id: userExist._id}, process.env.SECRET_KEY, {
             expiresIn: process.env.JWT_EXPIRE,
         });
-        return res.cookie("token",token).json({success:true,message:'LoggedIn Successfully'})
+        return res.cookie("token",token).json({success:true,message:'LoggedIn Successfully'}).status(200);
     } catch (error) {
         return res.json({ error: error });
     }
 
 });
+
+router.post('/reset-password/', async function (req,res) {
+
+});
+
+
+
 
 module.exports = router;
